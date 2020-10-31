@@ -41,7 +41,7 @@ export default {
   async mounted() {
     this.loading = true;
     const search = await fetch(
-      `http://www.omdbapi.com/?s=avengers&apikey=60fd5e0c`
+      `http://www.omdbapi.com/?s=trolls&apikey=60fd5e0c`
     )
       .then((data) => data.json())
       .then((data) => data);
