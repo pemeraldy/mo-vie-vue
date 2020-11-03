@@ -2,17 +2,17 @@
   <v-app dark>
     <v-main>
       <v-container grey lighten-5 fluid>
-        <v-app-bar app color="primary" flat>
-          <v-avatar
-            :color="$vuetify.breakpoint.smAndDown ? 'white' : 'transparent'"
-            size="32"
-          ></v-avatar>
+        <v-app-bar dark height="80" app color="primary" flat>
+          <v-app-bar-nav-icon></v-app-bar-nav-icon>
+          <v-toolbar-title>Mo-v-share</v-toolbar-title>
+          <v-spacer> </v-spacer>
+          <search-form />
+          <v-spacer></v-spacer>
+          <v-avatar color="white" size="32"></v-avatar>
 
-          <v-avatar
-            class="hidden-sm-and-down"
-            color="grey darken-1 shrink"
-            size="32"
-          ></v-avatar>
+          <v-btn icon>
+            <v-icon>mdi-export</v-icon>
+          </v-btn>
         </v-app-bar>
         <v-fade-transition>
           <router-view />
@@ -23,7 +23,11 @@
 </template>
 
 <script>
+import SearchForm from "@/components/SearchForm.vue";
 export default {
   name: "App",
+  components: {
+    SearchForm,
+  },
 };
 </script>

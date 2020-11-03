@@ -8,13 +8,13 @@
           </v-fade-transition>
         </v-col>
 
-        <v-col cols="12" sm="10">
+        <v-col cols="12" sm="8">
           <router-view />
         </v-col>
 
-        <!-- <v-col cols="12" sm="2">
+        <v-col cols="12" sm="2">
           <router-view name="right" />
-        </v-col> -->
+        </v-col>
       </v-row>
     </v-container>
   </div>

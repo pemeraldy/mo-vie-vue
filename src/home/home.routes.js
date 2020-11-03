@@ -20,6 +20,7 @@ export default [
       },
       {
         path: 'collections/:id',
+        name:'collections',
         components: {
           left: CollectionsList,
           default: CollectionMovieGallery,
