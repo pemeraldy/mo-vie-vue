@@ -2,7 +2,7 @@
   <v-app dark>
     <v-main>
       <v-container grey lighten-5 fluid>
-        <v-app-bar app color="primary" flat>
+        <v-app-bar dark height="80" app color="primary" flat>
           <v-app-bar-nav-icon></v-app-bar-nav-icon>
           <v-toolbar-title>Mo-v-share</v-toolbar-title>
           <v-spacer> </v-spacer>

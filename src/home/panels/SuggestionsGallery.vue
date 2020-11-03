@@ -2,7 +2,7 @@
   <!-- <v-sheet min-height="100%"> -->
   <v-container>
     <v-layout row>
-      <v-flex v-for="n in rows" :key="n.imdbID" md3>
+      <v-flex v-for="n in moviesInGallery" :key="n.imdbID" md3>
         <v-card :loading="loading" class="mx-2 my-2 " max-width="374">
           <template slot="progress">
             <v-progress-linear
@@ -38,17 +38,16 @@ export default {
       loading: false,
     };
   },
+  computed: {
+    moviesInGallery() {
+      return this.$store.getters["getSuggestionGallery"];
+    },
+  },
   async mounted() {
     this.loading = true;
-    const search = await fetch(
-      `http://www.omdbapi.com/?s=trolls&apikey=60fd5e0c`
-    )
-      .then((data) => data.json())
-      .then((data) => data);
-    const movies = await search.Search;
-    this.rows = movies;
-    console.log(movies);
+    await this.$store.dispatch("fetchSuggestionMovieGallery", "trolls");
     this.loading = false;
+    console.log(this.moviesInGallery);
   },
 };
 </script>

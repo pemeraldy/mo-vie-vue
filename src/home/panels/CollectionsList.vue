@@ -11,7 +11,9 @@
       <v-list-item-group color="primary">
         <v-list-item v-for="i in 7" :key="i">
           <v-list-item-content>
-            <v-list-item-title>Collection {{ i }}</v-list-item-title>
+            <v-list-item :to="{ name: 'collections', params: { id: i } }"
+              >Collection {{ i }}</v-list-item
+            >
             <v-list-item-subtitle
               >Description going for collection {{ i }}</v-list-item-subtitle
             >
