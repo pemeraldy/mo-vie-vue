@@ -46,7 +46,7 @@ export default {
   async mounted() {
     this.loading = true;
     await this.$store.dispatch("fetchSuggestionMovieGallery", "trolls");
-    this.loading = false;
+    // this.loading = false;
     console.log(this.moviesInGallery);
   },
 };
