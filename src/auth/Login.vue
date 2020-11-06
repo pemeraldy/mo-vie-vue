@@ -7,17 +7,20 @@
           <v-spacer></v-spacer>
         </v-toolbar>
         <v-card-text>
-          <v-form>
+          <v-form @submit.prevent="login" ref="form">
             <v-text-field
               label="Email"
               name="email"
+              v-model="email"
+              :rules="emailRules"
               prepend-icon="mdi-account"
               type="text"
             ></v-text-field>
 
             <v-text-field
-              id="password"
               label="Password"
+              v-model="password"
+              :rules="passwordRules"
               name="password"
               prepend-icon="mdi-lock"
               type="password"
@@ -27,7 +30,7 @@
         <v-card-actions>
           <v-btn text to="/sign-up">Sign Up </v-btn>
           <v-spacer></v-spacer>
-          <v-btn color="primary">Login</v-btn>
+          <v-btn @click="login" color="primary">Login</v-btn>
         </v-card-actions>
       </v-card>
     </v-col>
@@ -37,5 +40,40 @@
 <script>
 export default {
   name: "Login",
+  data() {
+    return {
+      passwordRules: [
+        (v) => !!v || "password is required",
+        (v) =>
+          (v && v.length >= 6) || "Password must not be less than 6 characters",
+      ],
+      emailRules: [
+        (v) => !!v || "E-mail is required",
+        (v) => /.+@.+\..+/.test(v) || "E-mail must be valid",
+      ],
+      email: "",
+      password: "",
+    };
+  },
+  methods: {
+    validate() {
+      this.$refs.form.validate();
+    },
+    reset() {
+      this.$refs.form.reset();
+    },
+    async login() {
+      try {
+        await this.$store.dispatch("login", {
+          email: this.email,
+          password: this.password,
+        });
+        this.reset();
+        this.$router.push("/home");
+      } catch (error) {
+        console.log(error);
+      }
+    },
+  },
 };
 </script>

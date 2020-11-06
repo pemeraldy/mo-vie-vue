@@ -13,6 +13,7 @@
           <v-btn icon>
             <v-icon>mdi-export</v-icon>
           </v-btn>
+          <v-btn color="red accent-2" to="/home">Home</v-btn>
         </v-app-bar>
         <v-fade-transition>
           <router-view />

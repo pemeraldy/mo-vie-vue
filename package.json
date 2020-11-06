@@ -1,7 +1,7 @@
 {
   "name": "movie-buff",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
   "license": "MIT",
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "core-js": "^3.6.5",
+    "firebase": "^8.0.1",
     "vue": "^2.6.11",
     "vue-router": "^3.4.8",
     "vuetify": "^2.2.11",
