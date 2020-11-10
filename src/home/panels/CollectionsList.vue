@@ -51,9 +51,9 @@
               >
                 {{ collection.name }}</v-list-item
               >
-              <v-list-item-subtitle
+              <!-- <v-list-item-subtitle
                 >Description going for collection
-              </v-list-item-subtitle>
+              </v-list-item-subtitle> -->
             </v-list-item-content>
           </v-list-item>
         </v-list-item-group>

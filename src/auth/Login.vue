@@ -30,7 +30,7 @@
         <v-card-actions>
           <v-btn text to="/sign-up">Sign Up </v-btn>
           <v-spacer></v-spacer>
-          <v-btn @click="login" color="primary">Login</v-btn>
+          <v-btn :loading="loading" @click="login" color="primary">Login</v-btn>
         </v-card-actions>
       </v-card>
     </v-col>
@@ -42,6 +42,7 @@ export default {
   name: "Login",
   data() {
     return {
+      loading: false,
       passwordRules: [
         (v) => !!v || "password is required",
         (v) =>
@@ -63,14 +64,17 @@ export default {
       this.$refs.form.reset();
     },
     async login() {
+      this.loading = true;
       try {
         await this.$store.dispatch("login", {
           email: this.email,
           password: this.password,
         });
         this.reset();
+        this.loading = false;
         this.$router.push("/home");
       } catch (error) {
+        this.loading = false;
         console.log(error);
       }
     },

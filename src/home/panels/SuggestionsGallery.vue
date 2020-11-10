@@ -40,8 +40,12 @@
                 </v-btn>
               </template>
               <v-list>
-                <v-list-item v-for="(item, index) in items" :key="index">
-                  <v-btn>{{ item.title }}</v-btn>
+                <v-list-item
+                  v-for="collection in moviecollections"
+                  :key="collection.id"
+                  @click="addToCollection(collection)"
+                >
+                  <v-btn>{{ collection.name }}</v-btn>
                 </v-list-item>
               </v-list>
             </v-menu>
@@ -61,27 +65,31 @@ export default {
       rows: 5,
       loading: false,
       closeOnClick: false,
-      items: [
-        { title: "Collection 1" },
-        { title: "Collection 2" },
-        { title: "Collection 3" },
-        { title: "Collection 4" },
-      ],
     };
   },
   computed: {
     moviesInGallery() {
       return this.$store.getters["getSuggestionGallery"];
     },
+    moviecollections() {
+      return this.$store.getters["getUserMovieCollections"];
+    },
   },
   methods: {
     async addToCollection(movie) {
+      console.log(movie.name);
       await firebaseServices.movieListCollection
-        // .doc("sugarMoves")
-        .add({ ...movie, collectionName: "Drama" })
-        .then(() => console.log("movie added succ."))
-        .catch((error) => console.log(error));
-      // console.log("Added to collection!!!", movie);
+        .doc(movie.id)
+        .set({
+          movies: movie.title,
+        })
+        .then(function() {
+          console.log("Document successfully updated!");
+        })
+        .catch(function(error) {
+          // The document probably doesn't exist.
+          console.error("Error updating document: ", error);
+        });
     },
   },
   async mounted() {

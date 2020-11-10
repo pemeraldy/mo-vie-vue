@@ -38,7 +38,9 @@
             <v-card-actions>
               <v-btn text to="/login">Login</v-btn>
               <v-spacer></v-spacer>
-              <v-btn @click="signUp" color="primary">Sign Up</v-btn>
+              <v-btn :loading="loading" @click="signUp" color="primary"
+                >Sign Up</v-btn
+              >
             </v-card-actions>
           </v-form>
         </v-card-text>
@@ -68,6 +70,7 @@ export default {
       email: "",
       username: "",
       password: "",
+      loading: false,
     };
   },
   methods: {
@@ -78,6 +81,7 @@ export default {
       this.$refs.form.reset();
     },
     async signUp() {
+      this.loading = true;
       console.log(this.email, this.password);
       this.validate();
       try {
@@ -86,9 +90,11 @@ export default {
           username: this.username,
           password: this.password,
         });
+        this.loading = false;
         this.$router.push("/login");
       } catch (error) {
         console.log("SINGUP ERR", error);
+        this.loading = false;
       }
     },
   },
