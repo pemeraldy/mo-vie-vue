@@ -3,13 +3,15 @@ import Vuex from 'vuex'
 import firebaseServices from '../firebase'
 Vue.use(Vuex)
 
+
+
 const store = new Vuex.Store({
   state: {
     user: null,
     userId: '',
     searchText: '',
     isLoading: false,
-    userMovieLists:[],
+    userMovieCollections:[],
     movieGalleryInit: []
   },
   mutations: {
@@ -18,7 +20,8 @@ const store = new Vuex.Store({
     state.userId = payload.id
    },
    setSuggestionGallery: (state, payload) => state.movieGalleryInit = payload,
-   setIsLoading: (state, payload) => state.isLoading = payload
+   setIsLoading: (state, payload) => state.isLoading = payload,
+   setUserMovieCollections: (state, payload) => state.userMovieCollections =  payload
   },
   actions:{
     async fetchSuggestionMovieGallery ({ commit },term='home'){      
@@ -37,10 +40,10 @@ const store = new Vuex.Store({
       console.log(error)
       commit('setIsLoading', true)
       }
-  },
+    },
     async login({dispatch}, payload){
       const {user} = await firebaseServices.auth.signInWithEmailAndPassword(payload.email,payload.password)
-       dispatch('fechUserProfile', user)
+       dispatch('fetchUserProfile', user)
     },
     async fetchUserProfile({ commit }, payload){
       const userProfile = await firebaseServices.usersCollection.doc(payload.uid).get()
@@ -59,11 +62,42 @@ const store = new Vuex.Store({
     
       // fetch user profile and set in state
       dispatch('fetchUserProfile', user)
+    },
+    async addToCollection({dispatch}, payload){
+      try {
+        const newCollection =  await firebaseServices.movieListCollection.add({
+          name: payload
+        })
+        dispatch('getMovieCollections')
+        console.log(newCollection)    
+      } catch (error) {
+        console.log(error)
+      }
+    },
+    async getMovieCollections({commit}){
+      const movieCollections = []
+      try {
+       await firebaseServices.movieListCollection.get().then(function(querySnapshot) {
+          querySnapshot.forEach(function(doc) {
+              // doc.data() is never undefined for query doc snapsh
+              let collection = {
+                id: doc.id,
+                name:doc.data().name
+              }
+              movieCollections.push(collection)
+          });
+      });
+      console.log(movieCollections)
+        commit('setUserMovieCollections', movieCollections)
+      } catch (error) {
+        console.log(error)
+      }
     }
 },
   getters:{
+    getIsLoading: (state) =>state.isLoading,
     getSuggestionGallery:(state) => state.movieGalleryInit,
-    getIsLoading: (state) =>state.isLoading
+    getUserMovieCollections: (state) => state.userMovieCollections
   }     
 })
 

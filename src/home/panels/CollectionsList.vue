@@ -1,33 +1,97 @@
 <template>
-  <v-card class="mx-auto mt-4 app" max-width="500">
-    <v-toolbar color="primary" dark class="d-flex justify-space-between">
-      <v-toolbar-title style="margin-right:74px" class="">
-        Collections
-      </v-toolbar-title>
-      <v-btn color="white ml-5" elevation="5" outlined>Add</v-btn>
-    </v-toolbar>
+  <div>
+    <v-card class="mx-auto mt-4 app" max-width="500">
+      <v-toolbar color="primary" dark class="d-flex justify-space-between">
+        <v-toolbar-title style="margin-right:74px" class="">
+          <v-dialog v-model="dialog" persistent max-width="350">
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn color="primary" dark v-bind="attrs" v-on="on">
+                Create Collection
+              </v-btn>
+            </template>
+            <v-card>
+              <v-card-title class="headline">
+                New Movies Collection
+              </v-card-title>
+              <v-container>
+                <v-text-field
+                  v-model="collectionName"
+                  label="Collection Name"
+                  hint="Drama, Action, Horror, ..."
+                ></v-text-field>
+              </v-container>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="green darken-1" text @click="dialog = false">
+                  Cancel
+                </v-btn>
+                <v-btn
+                  :loading="btnLoading"
+                  color="green darken-1"
+                  text
+                  @click="createCollection"
+                >
+                  Create
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+        </v-toolbar-title>
+      </v-toolbar>
 
-    <v-list>
-      <v-list-item-group color="primary">
-        <v-list-item v-for="i in 7" :key="i">
-          <v-list-item-content>
-            <v-list-item :to="{ name: 'collections', params: { id: i } }"
-              >Collection {{ i }}</v-list-item
-            >
-            <v-list-item-subtitle
-              >Description going for collection {{ i }}</v-list-item-subtitle
-            >
-          </v-list-item-content>
-        </v-list-item>
-      </v-list-item-group>
-    </v-list>
-  </v-card>
+      <v-list>
+        <v-list-item-group color="primary">
+          <v-list-item
+            v-for="collection in movieCollection"
+            :key="collection.id"
+          >
+            <v-list-item-content>
+              <v-list-item
+                :to="{ name: 'collections', params: { id: collection.id } }"
+              >
+                {{ collection.name }}</v-list-item
+              >
+              <v-list-item-subtitle
+                >Description going for collection
+              </v-list-item-subtitle>
+            </v-list-item-content>
+          </v-list-item>
+        </v-list-item-group>
+      </v-list>
+    </v-card>
+  </div>
 </template>
 <script>
 export default {
   name: "CollectionList",
   data() {
-    return {};
+    return {
+      dialog: false,
+      btnLoading: false,
+      collectionName: "",
+    };
+  },
+  methods: {
+    async createCollection() {
+      this.btnLoading = true;
+      try {
+        await this.$store.dispatch("addToCollection", this.collectionName);
+        console.log("collection " + this.collectionName + " created");
+        this.dialog = false;
+        this.btnLoading = false;
+        this.collectionName = "";
+      } catch (error) {
+        console.log(error);
+      }
+    },
+  },
+  computed: {
+    movieCollection() {
+      return this.$store.getters["getUserMovieCollections"];
+    },
+  },
+  async mounted() {
+    await this.$store.dispatch("getMovieCollections");
   },
 };
 </script>
