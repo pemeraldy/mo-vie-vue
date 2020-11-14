@@ -43,11 +43,14 @@ const store = new Vuex.Store({
     },
     async login({dispatch}, payload){
       const {user} = await firebaseServices.auth.signInWithEmailAndPassword(payload.email,payload.password)
+      // console.log("USER: ",user.data())
        dispatch('fetchUserProfile', user)
     },
     async fetchUserProfile({ commit }, payload){
+      console.log("PAYLOAD:  ",payload)
       const userProfile = await firebaseServices.usersCollection.doc(payload.uid).get()
-      commit('setUserProfile', userProfile.data())
+      console.log("USER: ",userProfile)
+      commit('setUserProfile', userProfile)
     },
     async signup({ dispatch }, payload) {
       // sign user up

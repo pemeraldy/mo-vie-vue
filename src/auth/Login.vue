@@ -7,6 +7,14 @@
           <v-spacer></v-spacer>
         </v-toolbar>
         <v-card-text>
+          <v-alert
+            v-if="error"
+            transition="slide-x-transition"
+            color="red"
+            outlined
+            type="warning"
+            >{{ error }}</v-alert
+          >
           <v-form @submit.prevent="login" ref="form">
             <v-text-field
               label="Email"
@@ -30,7 +38,7 @@
         <v-card-actions>
           <v-btn text to="/sign-up">Sign Up </v-btn>
           <v-spacer></v-spacer>
-          <v-btn @click="login" color="primary">Login</v-btn>
+          <v-btn :loading="loading" @click="login" color="primary">Login</v-btn>
         </v-card-actions>
       </v-card>
     </v-col>
@@ -42,6 +50,8 @@ export default {
   name: "Login",
   data() {
     return {
+      loading: false,
+      error: "",
       passwordRules: [
         (v) => !!v || "password is required",
         (v) =>
@@ -63,15 +73,23 @@ export default {
       this.$refs.form.reset();
     },
     async login() {
+      this.loading = true;
       try {
         await this.$store.dispatch("login", {
           email: this.email,
           password: this.password,
         });
         this.reset();
+        this.loading = false;
         this.$router.push("/home");
       } catch (error) {
-        console.log(error);
+        this.loading = false;
+        console.log(error.code);
+        if (error.code === "auth/network-request-failed") {
+          this.error = "Please check your internet connection";
+          return;
+        }
+        this.error = error.message;
       }
     },
   },
