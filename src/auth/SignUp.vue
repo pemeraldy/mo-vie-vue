@@ -7,6 +7,14 @@
           <v-spacer></v-spacer>
         </v-toolbar>
         <v-card-text>
+          <v-alert
+            v-if="error"
+            transition="slide-x-transition"
+            color="red"
+            outlined
+            type="warning"
+            >{{ error }}</v-alert
+          >
           <v-form ref="form" @submit.prevent="signUp">
             <v-text-field
               label="Email"
@@ -70,6 +78,7 @@ export default {
       email: "",
       username: "",
       password: "",
+      error: "",
       loading: false,
     };
   },
@@ -93,8 +102,14 @@ export default {
         this.loading = false;
         this.$router.push("/login");
       } catch (error) {
-        console.log("SINGUP ERR", error);
+        // console.log("SINGUP ERR", error);
         this.loading = false;
+        console.log(error.code);
+        if (error.code === "auth/network-request-failed") {
+          this.error = "Please check your internet connection";
+          return;
+        }
+        this.error = error.message;
       }
     },
   },
