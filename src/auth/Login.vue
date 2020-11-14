@@ -7,6 +7,14 @@
           <v-spacer></v-spacer>
         </v-toolbar>
         <v-card-text>
+          <v-alert
+            v-if="error"
+            transition="slide-x-transition"
+            color="red"
+            outlined
+            type="warning"
+            >{{ error }}</v-alert
+          >
           <v-form @submit.prevent="login" ref="form">
             <v-text-field
               label="Email"
@@ -43,6 +51,7 @@ export default {
   data() {
     return {
       loading: false,
+      error: "",
       passwordRules: [
         (v) => !!v || "password is required",
         (v) =>
@@ -75,7 +84,12 @@ export default {
         this.$router.push("/home");
       } catch (error) {
         this.loading = false;
-        console.log(error);
+        console.log(error.code);
+        if (error.code === "auth/network-request-failed") {
+          this.error = "Please check your internet connection";
+          return;
+        }
+        this.error = error.message;
       }
     },
   },
