@@ -66,10 +66,12 @@ const store = new Vuex.Store({
       // fetch user profile and set in state
       dispatch('fetchUserProfile', user)
     },
-    async addToCollection({dispatch}, payload){
+    async addToCollection({dispatch}, payload){ 
       try {
         const newCollection =  await firebaseServices.movieListCollection.add({
-          name: payload
+          name: payload,
+          userId: firebaseServices.auth.currentUser.uid,
+          movies: []
         })
         dispatch('getMovieCollections')
         console.log(newCollection)    

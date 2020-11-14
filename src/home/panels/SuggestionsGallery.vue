@@ -43,7 +43,7 @@
                 <v-list-item
                   v-for="collection in moviecollections"
                   :key="collection.id"
-                  @click="addToCollection(collection)"
+                  @click="addToCollection(collection, n)"
                 >
                   <v-btn>{{ collection.name }}</v-btn>
                 </v-list-item>
@@ -62,7 +62,6 @@ export default {
   name: "SuggestionGallery",
   data() {
     return {
-      rows: 5,
       loading: false,
       closeOnClick: false,
     };
@@ -76,15 +75,26 @@ export default {
     },
   },
   methods: {
-    async addToCollection(movie) {
-      console.log(movie.name);
-      await firebaseServices.movieListCollection
-        .doc(movie.id)
+    async addToCollection(movieCollection, movie) {
+      console.log(movie);
+      // console.log(firebaseServices.auth.currentUser.uid);
+
+      const movieColl = await firebaseServices.movieListCollection
+        .doc(movieCollection.id)
+        .get();
+      console.log("movie-col:", movieColl.data().movies);
+      let movieRef = await firebaseServices.movieListCollection.doc(
+        movieCollection.id
+      );
+      console.log(movieRef);
+      await movieRef
         .set({
-          movies: movie.title,
+          userId: firebaseServices.auth.currentUser.uid,
+          name: movieColl.data().name,
+          movies: [...movieColl.data().movies, movie],
         })
         .then(function() {
-          console.log("Document successfully updated!");
+          console.log("Movie successfully added!");
         })
         .catch(function(error) {
           // The document probably doesn't exist.
@@ -96,6 +106,8 @@ export default {
     this.loading = true;
     await this.$store.dispatch("fetchSuggestionMovieGallery", "trolls");
     // this.loading = false;
+    console.log("CURENT USER", firebaseServices.auth.currentUser.uid);
+
     console.log(this.moviesInGallery);
   },
 };
