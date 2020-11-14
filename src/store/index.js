@@ -28,7 +28,7 @@ const store = new Vuex.Store({
       commit('setIsLoading', true)
       try{
         const search = await fetch(
-        `http://www.omdbapi.com/?s=${term}&apikey=60fd5e0c`
+        `https://www.omdbapi.com/?s=${term}&apikey=60fd5e0c`
       )
         .then((data) => data.json())
         .then((data) => data);
@@ -43,7 +43,7 @@ const store = new Vuex.Store({
     },
     async login({dispatch}, payload){
       const {user} = await firebaseServices.auth.signInWithEmailAndPassword(payload.email,payload.password)
-      // console.log("USER: ",user.data())
+      console.log("USER: ",user)
        dispatch('fetchUserProfile', user)
     },
     async fetchUserProfile({ commit }, payload){
