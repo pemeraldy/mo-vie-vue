@@ -38,7 +38,6 @@ const store = new Vuex.Store({
   },
   mutations: {
     setUserProfile: (state, payload) =>{
-      console.log('Set_USER_PROFILE: ',payload)
     state.user = {
       id: payload.id,
       username: payload.data().username
@@ -68,11 +67,10 @@ const store = new Vuex.Store({
     },
     async login({dispatch}, payload){
       const {user} = await firebaseServices.auth.signInWithEmailAndPassword(payload.email,payload.password)
-      console.log("USER: ",user,user.uid)
        dispatch('fetchUserProfile', user)
     },
     async fetchUserProfile({ commit, dispatch }, payload){
-      console.log("FETCH USER  PAYLOAD:  ",payload.uid)
+      // console.log("FETCH USER  PAYLOAD:  ",payload.uid)
       const userProfile = await firebaseServices.usersCollection.doc(payload.uid).get()
       commit('setUserProfile', userProfile)
       dispatch('getMovieCollections', payload.uid)
@@ -94,13 +92,12 @@ const store = new Vuex.Store({
     },
     async addToCollection({dispatch}, payload){ 
       try {
-        const newCollection =  await firebaseServices.movieListCollection.add({
+         await firebaseServices.movieListCollection.add({
           name: payload,
           userId: firebaseServices.auth.currentUser.uid,
           movies: []
         })
-        dispatch('getMovieCollections')
-        console.log(newCollection)    
+        dispatch('getMovieCollections', this.state.user.id)
       } catch (error) {
         console.log(error)
       }
@@ -112,15 +109,19 @@ const store = new Vuex.Store({
        await firebaseServices.movieListCollection.where("userId", "==", userId)
        .get()
        .then(function(querySnapshot) {
-           querySnapshot.forEach(function(doc) {            
-               movieCollections.push(doc.data())
+           querySnapshot.forEach(function(doc) { 
+            let collection = {
+              id: doc.id,
+              name:doc.data().name
+            }           
+               movieCollections.push(collection)
+              //  console.log(doc)
            });
            console.log('UserFetchedMovieColl: ',movieCollections)
        })
        .catch(function(error) {
            console.log("Error getting documents: ", error);
        });
-      console.log('MOvieC0llections: ',movieCollections)
         commit('setUserMovieCollections', movieCollections)
       } catch (error) {
         console.log(error)

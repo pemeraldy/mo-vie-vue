@@ -82,7 +82,7 @@ export default {
       const movieColl = await firebaseServices.movieListCollection
         .doc(movieCollection.id)
         .get();
-      console.log("movie-col:", movieColl.data().movies);
+      // console.log("movie-col:", movieColl.data().movies);
       let movieRef = await firebaseServices.movieListCollection.doc(
         movieCollection.id
       );

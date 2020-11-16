@@ -16,7 +16,7 @@ export default [
         components: {
           left: CollectionsList,
           default: SuggestionsGallery,
-        },
+        },        
       },
       {
         path: 'collections/:id',
@@ -26,6 +26,9 @@ export default [
           default: CollectionMovieGallery,
           right: CollectionMovieList,
         },
+        meta: {
+          requiresAuth: true
+        }
       },
       {
         path: 'collections/:id/add',
