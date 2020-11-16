@@ -82,7 +82,7 @@ export default {
       const movieColl = await firebaseServices.movieListCollection
         .doc(movieCollection.id)
         .get();
-      console.log("movie-col:", movieColl.data().movies);
+      // console.log("movie-col:", movieColl.data().movies);
       let movieRef = await firebaseServices.movieListCollection.doc(
         movieCollection.id
       );
@@ -105,10 +105,12 @@ export default {
   async mounted() {
     this.loading = true;
     await this.$store.dispatch("fetchSuggestionMovieGallery", "trolls");
+    // await this.$store.dispatch("fetc");
     // this.loading = false;
-    console.log("CURENT USER", firebaseServices.auth.currentUser.uid);
 
-    console.log(this.moviesInGallery);
+    // console.log("CURENT USER", firebaseServices.auth.currentUser.uid);
+
+    // console.log(this.moviesInGallery);
   },
 };
 </script>

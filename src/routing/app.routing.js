@@ -4,7 +4,7 @@ import authRoutes from '../auth/auth.routes'
 import homeRoutes from '../home/home.routes'
 Vue.use(VueRouter)
 
-const baseRoute = { path: '/', redirect: '/login' }
+const baseRoute = { path: '/' }
 
 // router.beforeEach((to, from, next)=>{
 //   const requiresAuth = to.matched.some(x => x.meta.requiresAuth)

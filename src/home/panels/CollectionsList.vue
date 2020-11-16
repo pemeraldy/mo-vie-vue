@@ -39,7 +39,7 @@
         </v-toolbar-title>
       </v-toolbar>
 
-      <v-list>
+      <v-list v-if="movieCollection">
         <v-list-item-group color="primary">
           <v-list-item
             v-for="collection in movieCollection"
@@ -51,9 +51,6 @@
               >
                 {{ collection.name }}</v-list-item
               >
-              <!-- <v-list-item-subtitle
-                >Description going for collection
-              </v-list-item-subtitle> -->
             </v-list-item-content>
           </v-list-item>
         </v-list-item-group>
@@ -91,7 +88,8 @@ export default {
     },
   },
   async mounted() {
-    await this.$store.dispatch("getMovieCollections");
+    const { id } = this.$store.getters["getUser"];
+    await this.$store.dispatch("getMovieCollections", id);
   },
 };
 </script>

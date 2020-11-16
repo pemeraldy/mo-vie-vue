@@ -4,24 +4,48 @@ import firebaseServices from '../firebase'
 Vue.use(Vuex)
 
 
+// firebaseServices.movieListCollection.get().then(function(querySnapshot) {
+//   querySnapshot.forEach(function(doc) {
+//       // doc.data() is never undefined for query doc snapshots
+//       console.log(doc.id, " => ", doc.data());
+//   });
+// });
+const colletz = []
+firebaseServices.movieListCollection.where("userId", "==", "o7tCUME7t3SyDCgBRoKIvXGQXd3")
+    .get()
+    .then(function(querySnapshot) {
+        querySnapshot.forEach(function(doc) {            
+            colletz.push(doc.data())
+        });
+        console.log(colletz)
+    })
+    .catch(function(error) {
+        console.log("Error getting documents: ", error);
+    });
 
+
+// getColl()
 const store = new Vuex.Store({
   state: {
-    user: null,
-    userId: '',
+    user: {
+      id:'',
+      username:'',      
+    },
+    movieCollections:[],
     searchText: '',
     isLoading: false,
-    userMovieCollections:[],
     movieGalleryInit: []
   },
   mutations: {
     setUserProfile: (state, payload) =>{
-    state.user = payload.user
-    state.userId = payload.id
+    state.user = {
+      id: payload.id,
+      username: payload.data().username
+    }
    },
    setSuggestionGallery: (state, payload) => state.movieGalleryInit = payload,
    setIsLoading: (state, payload) => state.isLoading = payload,
-   setUserMovieCollections: (state, payload) => state.userMovieCollections =  payload
+   setUserMovieCollections: (state, payload) => state.movieCollections =  payload
   },
   actions:{
     async fetchSuggestionMovieGallery ({ commit },term='home'){      
@@ -43,14 +67,14 @@ const store = new Vuex.Store({
     },
     async login({dispatch}, payload){
       const {user} = await firebaseServices.auth.signInWithEmailAndPassword(payload.email,payload.password)
-      console.log("USER: ",user)
        dispatch('fetchUserProfile', user)
     },
-    async fetchUserProfile({ commit }, payload){
-      console.log("PAYLOAD:  ",payload)
+    async fetchUserProfile({ commit, dispatch }, payload){
+      // console.log("FETCH USER  PAYLOAD:  ",payload.uid)
       const userProfile = await firebaseServices.usersCollection.doc(payload.uid).get()
-      console.log("USER: ",userProfile)
       commit('setUserProfile', userProfile)
+      dispatch('getMovieCollections', payload.uid)
+
     },
     async signup({ dispatch }, payload) {
       // sign user up
@@ -68,31 +92,36 @@ const store = new Vuex.Store({
     },
     async addToCollection({dispatch}, payload){ 
       try {
-        const newCollection =  await firebaseServices.movieListCollection.add({
+         await firebaseServices.movieListCollection.add({
           name: payload,
           userId: firebaseServices.auth.currentUser.uid,
           movies: []
         })
-        dispatch('getMovieCollections')
-        console.log(newCollection)    
+        dispatch('getMovieCollections', this.state.user.id)
       } catch (error) {
         console.log(error)
       }
     },
-    async getMovieCollections({commit}){
+    async getMovieCollections({commit}, payload=" "){
       const movieCollections = []
+      const userId = payload
       try {
-       await firebaseServices.movieListCollection.get().then(function(querySnapshot) {
-          querySnapshot.forEach(function(doc) {
-              // doc.data() is never undefined for query doc snapsh
-              let collection = {
-                id: doc.id,
-                name:doc.data().name
-              }
-              movieCollections.push(collection)
-          });
-      });
-      console.log(movieCollections)
+       await firebaseServices.movieListCollection.where("userId", "==", userId)
+       .get()
+       .then(function(querySnapshot) {
+           querySnapshot.forEach(function(doc) { 
+            let collection = {
+              id: doc.id,
+              name:doc.data().name
+            }           
+               movieCollections.push(collection)
+              //  console.log(doc)
+           });
+           console.log('UserFetchedMovieColl: ',movieCollections)
+       })
+       .catch(function(error) {
+           console.log("Error getting documents: ", error);
+       });
         commit('setUserMovieCollections', movieCollections)
       } catch (error) {
         console.log(error)
@@ -102,7 +131,8 @@ const store = new Vuex.Store({
   getters:{
     getIsLoading: (state) =>state.isLoading,
     getSuggestionGallery:(state) => state.movieGalleryInit,
-    getUserMovieCollections: (state) => state.userMovieCollections
+    getUserMovieCollections: (state) => state.movieCollections,
+    getUser: (state) => state.user
   }     
 })
 
