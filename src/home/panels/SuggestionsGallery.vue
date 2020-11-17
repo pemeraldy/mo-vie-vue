@@ -76,9 +76,6 @@ export default {
   },
   methods: {
     async addToCollection(movieCollection, movie) {
-      console.log(movie);
-      // console.log(firebaseServices.auth.currentUser.uid);
-
       const movieColl = await firebaseServices.movieListCollection
         .doc(movieCollection.id)
         .get();
@@ -86,7 +83,6 @@ export default {
       let movieRef = await firebaseServices.movieListCollection.doc(
         movieCollection.id
       );
-      console.log(movieRef);
       await movieRef
         .set({
           userId: firebaseServices.auth.currentUser.uid,

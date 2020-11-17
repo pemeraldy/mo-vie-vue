@@ -73,7 +73,6 @@ export default {
       this.btnLoading = true;
       try {
         await this.$store.dispatch("addToCollection", this.collectionName);
-        console.log("collection " + this.collectionName + " created");
         this.dialog = false;
         this.btnLoading = false;
         this.collectionName = "";
