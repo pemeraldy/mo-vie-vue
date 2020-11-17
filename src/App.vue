@@ -8,12 +8,14 @@
           <v-spacer> </v-spacer>
           <search-form />
           <v-spacer></v-spacer>
-          <v-avatar color="white" size="32"></v-avatar>
-
-          <v-btn icon>
-            <v-icon>mdi-export</v-icon>
-          </v-btn>
-          <v-btn color="red accent-2" to="/home">Home</v-btn>
+          <p class="font-weight-regular pt-4 mr-3">
+            {{ user.username.charAt(0).toUpperCase() + user.username.slice(1) }}
+          </p>
+          <v-avatar color="white mr-2" size="32"></v-avatar>
+          <v-btn v-if="isLoggedIn" color="red accent-2" @click="signOut"
+            >Logout</v-btn
+          >
+          <v-btn v-else color="red accent-2">Sign Up</v-btn>
         </v-app-bar>
         <v-fade-transition>
           <router-view />
@@ -29,6 +31,20 @@ export default {
   name: "App",
   components: {
     SearchForm,
+  },
+  computed: {
+    isLoggedIn() {
+      return this.$store.getters["getUserLoggedIn"];
+    },
+    user() {
+      return this.$store.getters["getUser"];
+    },
+  },
+  methods: {
+    signOut() {
+      this.$store.dispatch("logout");
+      this.$router.push("/login");
+    },
   },
 };
 </script>

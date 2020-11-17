@@ -5,10 +5,19 @@ import CollectionMovieList from './panels/CollectionMovieList.vue'
 import CollectionsList from './panels/CollectionsList.vue'
 
 import SuggestionsGallery from './panels/SuggestionsGallery.vue'
+// import store from '../store/index'
+import fireServices from '../firebase'
 
 export default [
   {
     path: '/home',
+    beforeEnter:(_,__, next)=>{
+       if(fireServices.auth.currentUser){
+         next()
+       }else{
+         next({path: '/login'})
+       }
+    },
     component: Home,
     children: [
       {
