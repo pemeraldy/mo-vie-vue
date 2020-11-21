@@ -4,7 +4,9 @@
       <v-container grey lighten-5 fluid>
         <v-app-bar dark height="80" app color="primary" flat>
           <v-app-bar-nav-icon></v-app-bar-nav-icon>
-          <v-toolbar-title>Mo-v-share</v-toolbar-title>
+          <v-toolbar-title class="home-bar" @click="goHome"
+            >Mo-v-share</v-toolbar-title
+          >
           <v-spacer> </v-spacer>
           <search-form />
           <v-spacer></v-spacer>
@@ -45,6 +47,14 @@ export default {
       this.$store.dispatch("logout");
       this.$router.push("/login");
     },
+    goHome() {
+      this.$router.push("/home");
+    },
   },
 };
 </script>
+<style lang="css">
+.home-bar {
+  cursor: pointer;
+}
+</style>

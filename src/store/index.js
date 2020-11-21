@@ -126,7 +126,19 @@ const store = new Vuex.Store({
       } catch (error) {
         console.log(error);
       }
-    },    
+    }, 
+    async deleteMovieFrmCollection({dispatch}, payload){
+      const movref = await firebaseServices.movieListCollection.doc(payload.collectionId);
+      const newList = this.getters.getCollection.movies.filter(movie => movie.imdbID != payload.movie.imdbID)      
+      await movref.update({
+            movies: newList
+          })
+          .then(()=>{
+            console.log('collection updated')
+            dispatch('getCollectionById', payload.collectionId)
+          })
+          .catch(error=>{console.log(error);})
+    }   
 },
   getters:{
     getIsLoading: (state) =>state.isLoading,

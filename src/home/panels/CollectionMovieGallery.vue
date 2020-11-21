@@ -2,7 +2,7 @@
   <v-sheet min-height="100%" class="pa-3">
     <div class="row">
       <v-col sm12 md12>
-        <v-card class="mx-auto">
+        <v-card class="mx-auto" v-if="collection">
           <v-card-text>
             <p class="display-1 text--primary">
               {{ collection.name }}
@@ -15,7 +15,7 @@
         </v-card>
       </v-col>
     </div>
-    <v-layout row>
+    <v-layout row v-if="collection.movies">
       <v-flex v-for="movie in collection.movies" :key="movie.ImdbID" md3>
         <v-card :loading="loading" class="mx-2 my-2 " max-width="374">
           <template slot="progress">
@@ -49,8 +49,6 @@ export default {
     return {
       id: "",
       loading: true,
-
-      collectionMovies: [],
     };
   },
   watch: {
