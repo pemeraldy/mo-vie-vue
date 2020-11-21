@@ -33,13 +33,6 @@ export default {
     this.collectionName = name;
     this.collectionMovies = movies;
     console.log(name);
-
-    // movref
-    //   .doc(id)
-    //   .get()
-    //   .then((doc) => {
-    //     console.log(doc.data());
-    //   });
   },
 };
 </script>

@@ -80,6 +80,9 @@ export default {
         console.log(error);
       }
     },
+    async getCollection(collectionId) {
+      console.log(collectionId);
+    },
   },
   computed: {
     movieCollection() {
