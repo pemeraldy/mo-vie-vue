@@ -68,6 +68,7 @@ export default {
       collectionName: "",
     };
   },
+
   methods: {
     async createCollection() {
       this.btnLoading = true;
@@ -79,6 +80,9 @@ export default {
       } catch (error) {
         console.log(error);
       }
+    },
+    async getCollection(collectionId) {
+      console.log(collectionId);
     },
   },
   computed: {

@@ -12,6 +12,7 @@ const store = new Vuex.Store({
     },
     isUserLoggedIn:false,
     movieCollections:[],
+    collection:null,
     searchText: '',
     isLoading: false,
     movieGalleryInit: []
@@ -26,7 +27,8 @@ const store = new Vuex.Store({
    setIsUserLoggedIn:(state, data)=> state.isUserLoggedIn = data,
    setSuggestionGallery: (state, payload) => state.movieGalleryInit = payload,
    setIsLoading: (state, payload) => state.isLoading = payload,
-   setUserMovieCollections: (state, payload) => state.movieCollections =  payload
+   setUserMovieCollections: (state, payload) => state.movieCollections =  payload,
+   setCollectionById: (state, payload) => state.collection = payload
   },
   actions:{
     async fetchSuggestionMovieGallery ({ commit },term='home'){      
@@ -113,14 +115,39 @@ const store = new Vuex.Store({
       } catch (error) {
         console.log(error)
       }
-    }
+    },
+    async getCollectionById({commit}, payload){
+      // const id = payload
+      console.log(payload)
+      try {
+        const movref = await firebaseServices.movieListCollection.doc(payload).get();
+        const collection = await movref.data();
+        commit('setCollectionById', collection)                
+      } catch (error) {
+        console.log(error);
+      }
+    }, 
+    async deleteMovieFrmCollection({dispatch}, payload){
+      const movref = await firebaseServices.movieListCollection.doc(payload.collectionId);
+      const newList = this.getters.getCollection.movies.filter(movie => movie.imdbID != payload.movie.imdbID)      
+      await movref.update({
+            movies: newList
+          })
+          .then(()=>{
+            console.log('collection updated')
+            dispatch('getCollectionById', payload.collectionId)
+          })
+          .catch(error=>{console.log(error);})
+    }   
 },
   getters:{
     getIsLoading: (state) =>state.isLoading,
     getSuggestionGallery:(state) => state.movieGalleryInit,
     getUserMovieCollections: (state) => state.movieCollections,
     getUser: (state) => state.user,
-    getUserLoggedIn:(state) => state.isUserLoggedIn
+    getUserLoggedIn:(state) => state.isUserLoggedIn,
+    getCollection:(state) => state.collection,
+
   }     
 })
 
