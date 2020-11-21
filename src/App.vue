@@ -8,7 +8,7 @@
           <v-spacer> </v-spacer>
           <search-form />
           <v-spacer></v-spacer>
-          <p class="font-weight-regular pt-4 mr-3">
+          <p v-if="user" class="font-weight-regular pt-4 mr-3">
             {{ user.username.charAt(0).toUpperCase() + user.username.slice(1) }}
           </p>
           <v-avatar color="white mr-2" size="32"></v-avatar>
