@@ -104,9 +104,7 @@ const store = new Vuex.Store({
               name:doc.data().name
             }           
                movieCollections.push(collection)
-              //  console.log(doc)
            });
-          //  console.log('UserFetchedMovieColl: ',movieCollections)
        })
        .catch(function(error) {
            console.log("Error getting documents: ", error);
@@ -117,8 +115,6 @@ const store = new Vuex.Store({
       }
     },
     async getCollectionById({commit}, payload){
-      // const id = payload
-      console.log(payload)
       try {
         const movref = await firebaseServices.movieListCollection.doc(payload).get();
         const collection = await movref.data();

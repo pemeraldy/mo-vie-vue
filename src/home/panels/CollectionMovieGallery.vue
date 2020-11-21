@@ -15,7 +15,7 @@
         </v-card>
       </v-col>
     </div>
-    <v-layout row v-if="collection.movies">
+    <v-layout row v-if="collection">
       <v-flex v-for="movie in collection.movies" :key="movie.ImdbID" md3>
         <v-card :loading="loading" class="mx-2 my-2 " max-width="374">
           <template slot="progress">
@@ -54,7 +54,7 @@ export default {
   watch: {
     "$route.params.id": function(id) {
       this.$store.dispatch("getCollectionById", id);
-      console.log("route changed:", id);
+      // console.log("route changed:", id);
     },
   },
   computed: {

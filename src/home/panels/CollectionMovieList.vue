@@ -1,7 +1,7 @@
 <template>
   <v-sheet min-height="100%">
     <h2>Collection Movie List</h2>
-    <v-list>
+    <v-list v-if="collection">
       <v-list-item-group color="primary">
         <v-list-item v-for="movie in collection.movies" :key="movie.imdbID">
           <v-list-item-content>
@@ -26,7 +26,7 @@ export default {
   watch: {
     "$route.params.id": function(id) {
       this.$store.dispatch("getCollectionById", id);
-      console.log("route changed:", id);
+      // console.log("route changed:", id);
     },
   },
   computed: {

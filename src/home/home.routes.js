@@ -10,6 +10,14 @@ import fireServices from '../firebase'
 
 export default [
   {
+    path: '/search',
+    components: {
+      // left: CollectionsList,
+      default: SuggestionsGallery,
+    },        
+  },
+  {
+    
     path: '/home',
     beforeEnter:(_,__, next)=>{
        if(fireServices.auth.currentUser){
@@ -27,6 +35,7 @@ export default [
           default: SuggestionsGallery,
         },        
       },
+      
       {
         path: 'collections/:id',
         name:'collections',
