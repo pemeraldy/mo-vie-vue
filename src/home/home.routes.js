@@ -3,6 +3,7 @@ import CollectionMovieGallery from './panels/CollectionMovieGallery.vue'
 
 import CollectionMovieList from './panels/CollectionMovieList.vue'
 import CollectionsList from './panels/CollectionsList.vue'
+import Movie from './panels/Movie.vue'
 
 import SuggestionsGallery from './panels/SuggestionsGallery.vue'
 // import store from '../store/index'
@@ -11,10 +12,17 @@ import fireServices from '../firebase'
 export default [
   {
     path: '/search',
+    name: 'search',
     components: {
-      // left: CollectionsList,
       default: SuggestionsGallery,
+      // props: route => ({ query: route.query})
     },        
+  },
+  {
+    path: '/movie/:id',
+    name: 'movie',
+    component:Movie,
+    props: true    
   },
   {
     

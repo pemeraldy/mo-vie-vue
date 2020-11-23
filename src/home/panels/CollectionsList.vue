@@ -10,6 +10,9 @@
               </v-btn>
             </template>
             <v-card>
+              <v-alert v-if="error" color="red" type="info">{{
+                error
+              }}</v-alert>
               <v-card-title class="headline">
                 New Movies Collection
               </v-card-title>
@@ -66,11 +69,19 @@ export default {
       dialog: false,
       btnLoading: false,
       collectionName: "",
+      error: "",
     };
   },
 
   methods: {
     async createCollection() {
+      if (this.collectionName.length < 4) {
+        setTimeout(() => {
+          this.error = "";
+        }, 3000);
+        this.error = "Collection name cannot be less than four characters";
+        return;
+      }
       this.btnLoading = true;
       try {
         await this.$store.dispatch("addToCollection", this.collectionName);
@@ -78,6 +89,7 @@ export default {
         this.btnLoading = false;
         this.collectionName = "";
       } catch (error) {
+        this.error = "Cannot create collection";
         console.log(error);
       }
     },

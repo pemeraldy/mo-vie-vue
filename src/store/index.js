@@ -12,6 +12,7 @@ const store = new Vuex.Store({
     },
     isUserLoggedIn:false,
     movieCollections:[],
+    movie:null,
     collection:null,
     searchText: '',
     isLoading: false,
@@ -28,9 +29,42 @@ const store = new Vuex.Store({
    setSuggestionGallery: (state, payload) => state.movieGalleryInit = payload,
    setIsLoading: (state, payload) => state.isLoading = payload,
    setUserMovieCollections: (state, payload) => state.movieCollections =  payload,
-   setCollectionById: (state, payload) => state.collection = payload
+   setCollectionById: (state, payload) => state.collection = payload,
+   setMovieById: (state, payload) => state.movie = payload
   },
   actions:{
+    
+    async login({dispatch}, payload){
+      const {user} = await firebaseServices.auth.signInWithEmailAndPassword(payload.email,payload.password)
+       dispatch('fetchUserProfile', user)
+    },
+    async logout({commit}){
+      await firebaseServices.auth.signOut()
+      commit('setIsUserLoggedIn', false)
+    },
+    async signup({ dispatch }, payload) {
+      // sign user up
+      console.log('payload',payload)
+      const { user } = await firebaseServices.auth.createUserWithEmailAndPassword(payload.email, payload.password)
+    
+      // create user profile object in userCollections
+      await firebaseServices.usersCollection.doc(user.uid).set({
+        email: payload.email,
+        username: payload.username
+      })
+    
+      // fetch user profile and set in state
+      dispatch('fetchUserProfile', user)
+    },
+    async fetchUserProfile({ commit, dispatch }, payload){
+      // console.log("FETCH USER  PAYLOAD:  ",payload.uid)
+      // userId = firebaseServices.auth.currentUser.uid
+      const userProfile = await firebaseServices.usersCollection.doc(payload.uid).get()
+      commit('setUserProfile', userProfile)
+      commit('setIsUserLoggedIn', true)      
+      dispatch('getMovieCollections', payload.uid)
+
+    },    
     async fetchSuggestionMovieGallery ({ commit },term='home'){      
       commit('setIsLoading', true)
       try{
@@ -48,36 +82,22 @@ const store = new Vuex.Store({
       commit('setIsLoading', true)
       }
     },
-    async login({dispatch}, payload){
-      const {user} = await firebaseServices.auth.signInWithEmailAndPassword(payload.email,payload.password)
-       dispatch('fetchUserProfile', user)
-    },
-    async logout({commit}){
-      await firebaseServices.auth.signOut()
-      commit('setIsUserLoggedIn', false)
-    },
-    async fetchUserProfile({ commit, dispatch }, payload){
-      // console.log("FETCH USER  PAYLOAD:  ",payload.uid)
-      // userId = firebaseServices.auth.currentUser.uid
-      const userProfile = await firebaseServices.usersCollection.doc(payload.uid).get()
-      commit('setUserProfile', userProfile)
-      commit('setIsUserLoggedIn', true)      
-      dispatch('getMovieCollections', payload.uid)
-
-    },
-    async signup({ dispatch }, payload) {
-      // sign user up
-      console.log('payload',payload)
-      const { user } = await firebaseServices.auth.createUserWithEmailAndPassword(payload.email, payload.password)
-    
-      // create user profile object in userCollections
-      await firebaseServices.usersCollection.doc(user.uid).set({
-        email: payload.email,
-        username: payload.username
-      })
-    
-      // fetch user profile and set in state
-      dispatch('fetchUserProfile', user)
+    async getMovieById({ commit },id){      
+      commit('setIsLoading', true)
+      try{
+        const movieById = await fetch(
+        `https://www.omdbapi.com/?i=${id}&apikey=60fd5e0c`
+      )
+        .then((data) => data.json())
+        .then((data) => data);
+      const movie = await movieById.Search
+      commit('setMovieById', movie)
+      commit('setIsLoading', false)
+    }
+    catch(error){
+      console.log(error)
+      commit('setIsLoading', true)
+      }
     },
     async addToCollection({dispatch}, payload){ 
       try {
