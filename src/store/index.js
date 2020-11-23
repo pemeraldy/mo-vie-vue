@@ -82,7 +82,7 @@ const store = new Vuex.Store({
       commit('setIsLoading', true)
       }
     },
-    async getMovieById({ commit },id){      
+    async getMovieById({ commit },id){   
       commit('setIsLoading', true)
       try{
         const movieById = await fetch(
@@ -90,9 +90,11 @@ const store = new Vuex.Store({
       )
         .then((data) => data.json())
         .then((data) => data);
-      const movie = await movieById.Search
+      const movie = await movieById
+      console.log(movie);
       commit('setMovieById', movie)
       commit('setIsLoading', false)
+      return movie
     }
     catch(error){
       console.log(error)
