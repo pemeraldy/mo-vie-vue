@@ -32,7 +32,7 @@
 
           <v-card-title
             d-inline-block
-            class="d-inline-block text-truncate"
+            class=" text-truncate"
             style="max-width: 380px;"
             @click="addToCollection(n)"
             >{{ n.Title }}</v-card-title
