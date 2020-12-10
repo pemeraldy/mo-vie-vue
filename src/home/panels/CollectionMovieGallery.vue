@@ -1,21 +1,16 @@
 <template>
-  <v-sheet min-height="100%" class="pa-3">
+  <v-sheet rounded="lg" min-height="268" class="pa-3">
     <div class="row">
       <v-col sm12 md12>
         <v-card class="mx-auto" v-if="collection">
-          <v-card-text>
-            <p class="display-1 text--primary">
-              {{ collection.name }}
-            </p>
-
-            <div class="text--primary">
-              Description of collection
-            </div>
-          </v-card-text>
+          <v-card-title class="display-1 align-center text--primary">
+            {{ collection.name }}
+          </v-card-title>
         </v-card>
       </v-col>
     </div>
-    <v-layout row v-if="collection.movies">
+    <v-layout row v-if="collection.movies.length > 0">
+      <!-- <gallery-loader /> -->
       <v-flex v-for="movie in collection.movies" :key="movie.ImdbID" md3>
         <v-card :loading="loading" class="mx-2 my-2 " max-width="374">
           <template slot="progress">
@@ -40,11 +35,20 @@
         </v-card>
       </v-flex>
     </v-layout>
+    <v-layout v-else>
+      <v-card class="mx-auto" width="80%">
+        <v-img src="@/assets/empty-collection.png" alt="empty collection" />
+      </v-card>
+    </v-layout>
   </v-sheet>
 </template>
 <script>
+// import GalleryLoader from "../../components/GalleryLoader.vue";
 export default {
   name: "CollectionMovieGallery",
+  components: {
+    // GalleryLoader,
+  },
   data() {
     return {
       id: "",
@@ -54,7 +58,7 @@ export default {
   watch: {
     "$route.params.id": function(id) {
       this.$store.dispatch("getCollectionById", id);
-      console.log("route changed:", id);
+      // console.log("route changed:", id);
     },
   },
   computed: {
@@ -63,10 +67,10 @@ export default {
     },
   },
   async mounted() {
+    this.loading = false;
     const { id } = this.$route.params;
     try {
       this.$store.dispatch("getCollectionById", id);
-      this.loading = false;
     } catch (error) {
       console.log(error);
       this.loading = false;

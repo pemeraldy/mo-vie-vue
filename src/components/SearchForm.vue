@@ -1,7 +1,7 @@
 <template>
-  <v-form @submit.prevent="searchmovie" class="search-form">
+  <v-form @submit.prevent="searchMovie" class="search-form">
     <v-text-field
-      placeholder="search"
+      placeholder="Search movies"
       v-model="search"
       prepend-inner-icon="mdi-magnify"
       type="text"
@@ -21,9 +21,20 @@ export default {
       search: "",
     };
   },
+  watch: {
+    "$route.query": {
+      handler(query) {
+        this.searchMovie(query);
+      },
+    },
+  },
   methods: {
-    async searchmovie() {
-      await this.$store.dispatch("fetchSuggestionMovieGallery", this.search);
+    async searchMovie(query) {
+      query = this.search;
+      if (!query) return;
+      console.log(query);
+      this.$router.push({ name: "search", query: { t: this.search } });
+      await this.$store.dispatch("fetchSuggestionMovieGallery", query);
     },
   },
 };

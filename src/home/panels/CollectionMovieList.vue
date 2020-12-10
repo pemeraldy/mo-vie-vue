@@ -1,16 +1,23 @@
 <template>
-  <v-sheet min-height="100%">
-    <h2>Collection Movie List</h2>
-    <v-list>
+  <v-sheet rounded="lg" min-height="268">
+    <v-toolbar color="red accent-3" dark>
+      <v-icon>mdi-animation-play</v-icon>
+      <v-toolbar-title class="ml-1">Collection Movie List</v-toolbar-title>
+    </v-toolbar>
+    <v-list v-if="collection">
       <v-list-item-group color="primary">
         <v-list-item v-for="movie in collection.movies" :key="movie.imdbID">
           <v-list-item-content>
             <v-list-item-title> {{ movie.Title }} </v-list-item-title>
-            <v-list-item-subtitle> {{ movie.Year }}</v-list-item-subtitle>
-            <v-btn @click="deleteMovie(movie)" dark color="btn red  outlined"
-              >Delete</v-btn
-            >
           </v-list-item-content>
+          <v-list-item-icon
+            icon
+            @click="deleteMovie(movie)"
+            dark
+            color="btn red  outlined"
+          >
+            <v-icon color="red">mdi-delete</v-icon>
+          </v-list-item-icon>
         </v-list-item>
       </v-list-item-group>
     </v-list>
@@ -26,7 +33,7 @@ export default {
   watch: {
     "$route.params.id": function(id) {
       this.$store.dispatch("getCollectionById", id);
-      console.log("route changed:", id);
+      // console.log("route changed:", id);
     },
   },
   computed: {
