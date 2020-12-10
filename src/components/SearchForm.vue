@@ -32,8 +32,11 @@ export default {
     async searchMovie(query) {
       query = this.search;
       if (!query) return;
-      console.log(query);
-      this.$router.push({ name: "search", query: { t: this.search } });
+      console.log(this.$route.path);
+      if (this.$route.path != "/home") {
+        this.$router.push({ name: "search", query: { t: this.search } });
+        await this.$store.dispatch("fetchSuggestionMovieGallery", query);
+      }
       await this.$store.dispatch("fetchSuggestionMovieGallery", query);
     },
   },
