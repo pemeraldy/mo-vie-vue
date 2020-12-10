@@ -1,7 +1,7 @@
 <template>
   <v-app dark>
-    <v-app-bar dark app flat>
-      <v-tabs class="ml-n9 px-4" color="red darken-1">
+    <v-app-bar app flat>
+      <v-tabs class="ml-n9 px-5" color="red darken-1">
         <v-tab class="app-name" to="/home">Mo-v-share</v-tab>
         <v-spacer></v-spacer>
         <v-switch
@@ -12,9 +12,6 @@
         ></v-switch>
         <v-spacer></v-spacer>
         <!-- <search-form /> -->
-        <v-sheet v-if="user" class="font-weight-regular pt-4 mr-3">
-          {{ user.username.charAt(0).toUpperCase() + user.username.slice(1) }}
-        </v-sheet>
 
         <v-tab v-if="isLoggedIn" color="red accent-2" @click="signOut"
           >Logout</v-tab
@@ -28,6 +25,9 @@
         >
       </v-tabs>
       <v-avatar color="white mr-2" size="32"></v-avatar>
+      <v-toolbar-title v-if="user" class="font-weight-regular pt-4 mr-3">
+        {{ user.username.charAt(0).toUpperCase() + user.username.slice(1) }}
+      </v-toolbar-title>
     </v-app-bar>
     <v-main>
       <v-container fluid>
@@ -57,7 +57,7 @@ export default {
   methods: {
     signOut() {
       this.$store.dispatch("logout");
-      this.$router.push("/login");
+      this.$router.push("/search");
       this.user.username = "";
       this.user.id = "";
       console.log(this.user.username);

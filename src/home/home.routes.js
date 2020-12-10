@@ -13,7 +13,7 @@ export default [
   {
     path: '/search',
     name: 'search',
-    components: {
+    components: {      
       default: SuggestionsGallery,
       // props: route => ({ query: route.query})
     },        

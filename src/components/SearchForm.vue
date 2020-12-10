@@ -1,7 +1,7 @@
 <template>
   <v-form @submit.prevent="searchMovie" class="search-form">
     <v-text-field
-      placeholder="search"
+      placeholder="Search movies"
       v-model="search"
       prepend-inner-icon="mdi-magnify"
       type="text"
