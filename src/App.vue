@@ -57,6 +57,8 @@ export default {
   methods: {
     signOut() {
       this.$store.dispatch("logout");
+      this.$store.commit("setUserMovieCollections", []);
+      // this.reloadAccess.reload();
       this.$router.push("/search");
       this.user.username = "";
       this.user.id = "";
