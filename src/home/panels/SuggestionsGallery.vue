@@ -21,7 +21,8 @@
             :to="{ name: 'movie', params: { id: n.imdbID } }"
             class="mx-2 my-2 "
             max-width="374"
-            max-height="484"
+            max-height="460"
+            min-height="460"
           >
             <v-img height="250" :src="n.Poster"></v-img>
 
@@ -68,13 +69,7 @@
                 Add to collections
               </div>
               <v-spacer></v-spacer>
-              <v-btn
-                dark
-                class="primary ml-2"
-                to="/login"
-                icon
-                @click.prevent="goto"
-              >
+              <v-btn dark class="primary ml-2" to="/login" icon @click.prevent>
                 <v-icon>mdi-plus</v-icon>
               </v-btn>
             </v-card-actions>

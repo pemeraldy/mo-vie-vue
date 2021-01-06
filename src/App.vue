@@ -2,7 +2,9 @@
   <v-app dark>
     <v-app-bar app flat>
       <v-tabs class="ml-n9 px-5" color="red darken-1">
-        <v-tab class="app-name" to="/home">Mo-v-share</v-tab>
+        <v-tab class="app-name" @click="drawer = !drawer" to="/home"
+          >Mo-v-share</v-tab
+        >
         <v-spacer></v-spacer>
         <v-switch
           v-model="$vuetify.theme.dark"
@@ -29,6 +31,33 @@
         {{ user.username.charAt(0).toUpperCase() + user.username.slice(1) }}
       </v-toolbar-title>
     </v-app-bar>
+    <v-navigation-drawer v-model="drawer" absolute temporary>
+      <v-list-item>
+        <v-list-item-avatar>
+          <v-icon>mdi-user</v-icon>
+        </v-list-item-avatar>
+
+        <v-list-item-content>
+          <v-list-item-title v-if="user">{{
+            user.username.charAt(0).toUpperCase() + user.username.slice(1)
+          }}</v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
+
+      <v-divider></v-divider>
+
+      <v-list dense>
+        <v-list-item v-for="item in items" :key="item.title" link>
+          <v-list-item-icon>
+            <v-icon>{{ item.icon }}</v-icon>
+          </v-list-item-icon>
+
+          <v-list-item-content>
+            <v-list-item-title>{{ item.title }}</v-list-item-title>
+          </v-list-item-content>
+        </v-list-item>
+      </v-list>
+    </v-navigation-drawer>
     <v-main>
       <v-container fluid>
         <v-fade-transition>
@@ -43,6 +72,17 @@
 // import SearchForm from "@/components/SearchForm.vue";
 export default {
   name: "App",
+  data() {
+    return {
+      drawer: true,
+      items: [
+        { title: "Home", icon: "mdi-view-dashboard" },
+        { title: "Search", icon: "mdi-magnify" },
+        { title: "Login", icon: "mdi-login" },
+        { title: "Sign up", icon: "mdi-clipboard-account" },
+      ],
+    };
+  },
   components: {
     // SearchForm,
   },
