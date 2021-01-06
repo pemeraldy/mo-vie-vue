@@ -10,7 +10,7 @@
           </v-fade-transition>
         </v-col>
 
-        <v-col cols="12" sm="8">
+        <v-col cols="12" sm="8" >
           <search-form></search-form>
           <v-sheet min-height="70vh" class="px-2" rounded="lg">
             <router-view />

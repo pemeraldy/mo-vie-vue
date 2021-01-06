@@ -14,6 +14,7 @@ export default [
     path: '/search',
     name: 'search',
     components: {      
+      left: CollectionsList,
       default: SuggestionsGallery,
       // props: route => ({ query: route.query})
     },        
